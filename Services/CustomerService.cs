@@ -10,6 +10,38 @@ public class CustomerService
 {
     private const string CustomersTable = "Customers";
 
+    public Customer Save(Customer c)
+    {
+        SqlConnection connection = new SqlConnection(
+            ApplicationManager.Instance.GetConnectionString()
+        );
+
+        connection.Open();
+
+        String sql = "INSERT INTO Customers (FirstName, LastName, RefNumber) VALUES (@FirstName, @LastName, @RefNumber)";
+
+        if(c.Id != null) {
+            // UPDATE
+            sql = "UPDATE Customers SET FirstName=@FirstName, LastName=@LastName, RefNumber=@RefNumber WHERE Id=@Id";
+        }
+
+        SqlCommand command = new SqlCommand(sql, connection);
+
+        if(c.Id != null) {
+            command.Parameters.AddWithValue("@Id", c.Id);
+        }
+
+        command.Parameters.AddWithValue("@FirstName", c.FirstName);
+        command.Parameters.AddWithValue("@LastName", c.LastName);
+        command.Parameters.AddWithValue("@RefNumber", c.RefNumber);
+
+        command.ExecuteNonQuery();
+
+        connection.Close();
+
+        return c;
+    }
+
     public Customer Save(Dictionary<string, object> hash)
     {
         Int32 id            = Int32.Parse(hash["id"].ToString());
@@ -19,34 +51,7 @@ public class CustomerService
 
         Customer temp = new Customer(id, refNumber, firstName, lastName);
 
-        SqlConnection connection = new SqlConnection(
-            ApplicationManager.Instance.GetConnectionString()
-        );
-
-        connection.Open();
-
-        String sql = "INSERT INTO Customers (FirstName, LastName, RefNumber) VALUES (@FirstName, @LastName, @RefNumber)";
-
-        if(id != null) {
-            // UPDATE
-            sql = "UPDATE Customers SET FirstName=@FirstName, LastName=@LastName, RefNumber=@RefNumber WHERE Id=@Id";
-        }
-
-        SqlCommand command = new SqlCommand(sql, connection);
-
-        if(id != null) {
-            command.Parameters.AddWithValue("@Id", temp.Id);
-        }
-
-        command.Parameters.AddWithValue("@FirstName", temp.FirstName);
-        command.Parameters.AddWithValue("@LastName", temp.LastName);
-        command.Parameters.AddWithValue("@RefNumber", temp.RefNumber);
-
-        command.ExecuteNonQuery();
-
-        connection.Close();
-
-        return temp;
+        return this.Save(temp);
     }
 
     public Customer FindById(int id)

@@ -54,8 +54,47 @@ public class CustomersController : ControllerBase
         return Ok(payload);
     }
 
+    [HttpPut("{id}")]
+    public IActionResult Update([FromBody]object payload, int id)
+    {
+        try {
+            Customer customer = CustomerService.Instance.FindById(id);
+
+            Dictionary<string, object> hash = JsonSerializer.Deserialize<Dictionary<string, object>>(payload.ToString());
+
+            if(hash["firstName"] != null) {
+                customer.FirstName = hash["firstName"].ToString();
+            }
+
+            if(hash["lastName"] != null) {
+                customer.LastName = hash["lastName"].ToString();
+            }
+
+            if(hash["refNumber"] != null) {
+                customer.RefNumber = hash["refNumber"].ToString();
+            }
+
+            Validator validator = new ValidateSaveCustomer(customer);
+            validator.run();
+
+            if(validator.HasErrors) {
+                return UnprocessableEntity(validator.Payload);
+            } else {
+                Customer temp = CustomerService.Instance.Save(customer);
+                return Ok(temp);
+            }
+            
+        } catch(Exception e) {
+            Dictionary<string, string> msg = new Dictionary<string, string>();
+            msg["message"] = "Something went wrong";
+
+            return StatusCode(StatusCodes.Status500InternalServerError, msg);
+
+        }
+    }
+
     [HttpPost]
-    public IActionResult Save([FromBody]object payload)
+    public IActionResult Create([FromBody]object payload)
     {
         try {
             Dictionary<string, object> hash = JsonSerializer.Deserialize<Dictionary<string, object>>(payload.ToString());
