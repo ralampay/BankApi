@@ -16,11 +16,4 @@ public class AccountTransactionsController : ControllerBase
         _logger = logger;
     }
 
-    [HttpGet("{id}/display")]
-    public IActionResult Index(int id)
-    {
-        List<AccountTransaction> transactions = AccountTransactionService.Instance.GetAllByBankAccount(id);
-
-        return Ok(transactions);
-    }
 }

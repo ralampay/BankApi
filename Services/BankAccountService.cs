@@ -9,6 +9,33 @@ public class BankAccountService
 {
     private string BankAccountsTable = "BankAccounts";
 
+    public BankAccount UpdateBalance(BankAccount bankAccount, Decimal balance)
+    {
+        bankAccount.Balance += balance;
+
+        Console.WriteLine("bankAccount.Id: " + bankAccount.Id);
+        Console.WriteLine("bankAccount.Balance: " + bankAccount.Balance);
+
+        SqlConnection connection = new SqlConnection(
+            ApplicationManager.Instance.GetConnectionString()
+        );
+
+        connection.Open();
+
+        String sql = "UPDATE BankAccounts SET Balance=@balance WHERE Id=@id";
+
+        SqlCommand command = new SqlCommand(sql, connection);
+
+        command.Parameters.AddWithValue("@id", bankAccount.Id);
+        command.Parameters.AddWithValue("@balance", bankAccount.Balance);
+
+        command.ExecuteNonQuery();
+
+        connection.Close();
+
+        return bankAccount;
+    }
+
     public BankAccount FindById(int id)
     {
         BankAccount bankAccount = null;
@@ -60,7 +87,11 @@ public class BankAccountService
                     accountNumber,
                     customer
                 );
+            } else {
+                throw new Exception("Invalid BankAccount type");
             }
+
+            bankAccount.Balance = balance;
         }
 
         return bankAccount;
