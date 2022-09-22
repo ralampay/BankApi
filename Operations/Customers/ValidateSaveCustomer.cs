@@ -11,8 +11,36 @@ public class ValidateSaveCustomer : Validator
     public String LastName { get; private set; }
     public String RefNumber { get; private set; }
 
-    public ValidateSaveCustomer(Dictionary<string, object> hash)
+    public void InitializeParameters(Dictionary<string, object> hash)
     {
+        if(hash["id"] != null) {
+            this.Id = JsonSerializer.Deserialize<int>((JsonElement)hash["id"]);
+        }
+
+        if(hash["firstName"] != null) {
+            this.FirstName = hash["firstName"].ToString();
+        }
+
+        if(hash["lastName"] != null) {
+            this.LastName = hash["lastName"].ToString();
+        }
+
+        if(hash["refNumber"] != null) {
+            this.RefNumber  = hash["refNumber"].ToString();
+        }
+    }
+
+    private readonly ICustomerService _customerService;
+
+    public ValidateSaveCustomer(ICustomerService customerService)
+    {
+        _customerService = customerService;
+    }
+
+    public ValidateSaveCustomer(Dictionary<string, object> hash, ICustomerService customerService)
+    {
+        _customerService = customerService;
+
         if(hash["id"] != null) {
             this.Id = JsonSerializer.Deserialize<int>((JsonElement)hash["id"]);
         }
@@ -54,7 +82,7 @@ public class ValidateSaveCustomer : Validator
             String msg = "Ref number is required";
             this.AddError(msg, "refNumber");
         } else if(this.Id == null) {
-            Customer temp = CustomerService.Instance.FindByRefNumber(this.RefNumber);
+            Customer temp = _customerService.FindByRefNumber(this.RefNumber);
 
             if(temp != null) {
                 String msg = "Ref number is already taken";
@@ -62,7 +90,7 @@ public class ValidateSaveCustomer : Validator
             }
         } else {
             // Validating refNumber for update
-            Customer temp = CustomerService.Instance.FindById(this.Id);
+            Customer temp = _customerService.FindById(this.Id);
 
             if(temp == null) {
                 String msg = "Customer not found";
@@ -70,7 +98,7 @@ public class ValidateSaveCustomer : Validator
             } else {
                 if(!this.RefNumber.Equals(temp.RefNumber)) {
                     // CHeck for uniqueness
-                    Customer existingCustomer = CustomerService.Instance.FindByRefNumber(this.RefNumber);
+                    Customer existingCustomer = _customerService.FindByRefNumber(this.RefNumber);
 
                     if(existingCustomer != null) {
                         String msg = "Ref number is already taken";

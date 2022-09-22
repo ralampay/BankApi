@@ -6,7 +6,7 @@ using System.Data;
 
 using BankApi.Models;
 
-public class CustomerService
+public class RawCustomerService : ICustomerService
 {
     private const string CustomersTable = "Customers";
 
@@ -154,17 +154,5 @@ public class CustomerService
         connection.Close();
 
         return customers;
-    }
-
-    private static CustomerService instance = null;
-
-    public static CustomerService Instance {
-        get {
-            if(instance == null) {
-                instance = new CustomerService();
-            }
-
-            return instance;
-        }
     }
 }

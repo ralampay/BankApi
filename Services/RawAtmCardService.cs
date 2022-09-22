@@ -6,7 +6,7 @@ using System.Data;
 using BankApi.Models;
 using BankApi.Services;
 
-public class AtmCardService
+public class RawAtmCardService : IATMCardService
 {
     private string ATMCardsTable = "ATMCards";
 
@@ -42,17 +42,5 @@ public class AtmCardService
         }
 
         return atmCard;
-    }
-
-    private static AtmCardService instance = null;
-
-    public static AtmCardService Instance {
-        get {
-            if(instance == null) {
-                instance = new AtmCardService();
-            }
-
-            return instance;
-        }
     }
 }

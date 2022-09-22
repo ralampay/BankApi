@@ -6,8 +6,16 @@ using System.Data;
 
 using BankApi.Models;
 
-public class AccountTransactionService
+public class RawAccountTransactionService : IAccountTransactionService
 {
+
+    private readonly IBankAccountService _bankAccountService;
+
+    public RawAccountTransactionService(IBankAccountService bankAccountService)
+    {
+        _bankAccountService = bankAccountService;
+    }
+
     public AccountTransaction Transact(BankAccount bankAccount, String transactionType, Decimal amount)
     {
         if(transactionType == "DEPOSIT") {
@@ -59,7 +67,7 @@ public class AccountTransactionService
 
         connection.Close();
 
-        BankAccountService.Instance.UpdateBalance(bankAccount, amount);
+        _bankAccountService.UpdateBalance(bankAccount, amount);
 
         return accountTransaction;
     }
@@ -71,7 +79,7 @@ public class AccountTransactionService
 
     public List<AccountTransaction> GetAllByBankAccount(int id)
     {
-        BankAccount o = BankAccountService.Instance.FindById(id);
+        BankAccount o = _bankAccountService.FindById(id);
 
         // Use id to make http request in json-server
 
@@ -100,7 +108,7 @@ public class AccountTransactionService
             string transactionType  = (string)reader["TransactionType"];
             decimal amount          = (decimal)(double)reader["Amount"];
             DateTime transactedAt   = (DateTime)reader["TransactedAt"];
-            BankAccount bankAccount = BankAccountService.Instance.FindById((int)reader["BankAccountId"]);
+            BankAccount bankAccount = _bankAccountService.FindById((int)reader["BankAccountId"]);
             decimal startingBalance = (decimal)(double)reader["StartingBalance"];
             decimal endingBalance   = (decimal)(double)reader["EndingBalance"];
 
@@ -120,17 +128,5 @@ public class AccountTransactionService
         connection.Close();
 
         return accountTransactions;
-    }
-
-    private static AccountTransactionService instance = null;
-
-    public static AccountTransactionService Instance {
-        get {
-            if(instance == null) {
-                instance = new AccountTransactionService();
-            }
-
-            return instance;
-        }
     }
 }

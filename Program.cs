@@ -1,4 +1,5 @@
 using BankApi.Services;
+using BankApi.Operations.Customers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,12 +10,11 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// HelloWorld helloWorld = new HelloWorld();
-builder.Services.AddScoped<IBankAccountService, OracleBankAccountService>();
-builder.Services.AddScoped<ICustomerService>(provider => {
-    return new MySQLCustomerService();
-});
-builder.Services.AddScoped<HelloService, HelloService>();
+builder.Services.AddScoped<IAccountTransactionService, RawAccountTransactionService>();
+builder.Services.AddScoped<IATMCardService, RawAtmCardService>();
+builder.Services.AddScoped<IBankAccountService, RawBankAccountService>();
+builder.Services.AddScoped<ICustomerService, RawCustomerService>();
+builder.Services.AddScoped<ValidateSaveCustomer, ValidateSaveCustomer>();
 
 var app = builder.Build();
 

@@ -16,4 +16,8 @@ public class AccountTransactionsController : ControllerBase
         _logger = logger;
     }
 
+    private AccountTransaction Withdraw(BankAccount bankAccount, Decimal amount)
+    {
+        throw new NotImplementedException();
+    }
 }

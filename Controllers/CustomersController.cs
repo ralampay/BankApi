@@ -12,21 +12,19 @@ using BankApi.Operations.Customers;
 public class CustomersController : ControllerBase
 {
     private readonly ILogger<CustomersController> _logger;
-    private readonly HelloService _helloService;
     private readonly ICustomerService _customerService;
+    private readonly ValidateSaveCustomer _validateSaveCustomer;
 
-    public CustomersController(ILogger<CustomersController> logger, HelloService helloService, ICustomerService customerService)
+    public CustomersController(ILogger<CustomersController> logger, ICustomerService customerService, ValidateSaveCustomer validateSaveCustomer)
     {
         _logger = logger;
-        _helloService = helloService;
         _customerService = customerService;
+        _validateSaveCustomer = validateSaveCustomer;
     }
 
     [HttpGet]
     public IActionResult Index(String ?q)
     {
-        //HelloService helloService = new HelloService();
-        _helloService.Hello();
 
         _logger.LogInformation("q: " + q);
         List<Customer> customers = _customerService.GetAll();
@@ -39,7 +37,7 @@ public class CustomersController : ControllerBase
     [HttpGet("{id}")] // Example: customers/5
     public IActionResult Show(int id)
     {
-        Customer customer = CustomerService.Instance.FindById(id);
+        Customer customer = _customerService.FindById(id);
 
         Validator validator = new ValidateGetCustomer(customer); 
         validator.run();
@@ -51,21 +49,11 @@ public class CustomersController : ControllerBase
         }
     }
 
-    // URL: /customers/1/accounts
-    // Exercise: Complete the endpoint and test if it works
-    [HttpGet("{id}/accounts")]
-    public IActionResult Accounts(int id)
-    {
-        List<Dictionary<string, object>> payload = BankAccountService.Instance.GetAccountsPayload(id);
-
-        return Ok(payload);
-    }
-
     [HttpPut("{id}")]
     public IActionResult Update([FromBody]object payload, int id)
     {
         try {
-            Customer customer = CustomerService.Instance.FindById(id);
+            Customer customer = _customerService.FindById(id);
 
             Dictionary<string, object> hash = JsonSerializer.Deserialize<Dictionary<string, object>>(payload.ToString());
 
@@ -87,7 +75,7 @@ public class CustomersController : ControllerBase
             if(validator.HasErrors) {
                 return UnprocessableEntity(validator.Payload);
             } else {
-                Customer temp = CustomerService.Instance.Save(customer);
+                Customer temp = _customerService.Save(customer);
                 return Ok(temp);
             }
             
@@ -106,13 +94,15 @@ public class CustomersController : ControllerBase
         try {
             Dictionary<string, object> hash = JsonSerializer.Deserialize<Dictionary<string, object>>(payload.ToString());
 
-            Validator validator = new ValidateSaveCustomer(hash);
-            validator.run();
+            _validateSaveCustomer.InitializeParameters(hash);
+            _validateSaveCustomer.run();
+            //Validator validator = new ValidateSaveCustomer(hash, _customerService);
+            //validator.run();
 
-            if(validator.HasErrors) {
-                return UnprocessableEntity(validator.Payload);
+            if(_validateSaveCustomer.HasErrors) {
+                return UnprocessableEntity(_validateSaveCustomer.Payload);
             } else {
-                Customer temp = CustomerService.Instance.Save(hash);
+                Customer temp = _customerService.Save(hash);
                 return Ok(temp);
             }
         } catch(Exception e) {

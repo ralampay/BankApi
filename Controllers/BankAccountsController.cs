@@ -12,16 +12,26 @@ using BankApi.Operations.AccountTransactions;
 [Route("bank_accounts")]
 public class BankAccountsController : ControllerBase
 {
+    private readonly IBankAccountService _bankAccountService;
+
+    private readonly IAccountTransactionService _accountTransactionService;
+
+    public BankAccountsController(IBankAccountService bankAccountService, IAccountTransactionService accountTransactionService)
+    {
+        _bankAccountService = bankAccountService;
+        _accountTransactionService = accountTransactionService;
+    }
+
     [HttpGet("{id}")]
     public IActionResult Show(int id)
     {
-        return Ok(BankAccountService.Instance.FindById(id));
+        return Ok(_bankAccountService.FindById(id));
     }
 
     [HttpPost("{id}/transact")]
     public IActionResult Transact(int id, [FromBody]object payload)
     {
-        BankAccount bankAccount = BankAccountService.Instance.FindById(id);
+        BankAccount bankAccount = _bankAccountService.FindById(id);
 
         Dictionary<string, object> hash = JsonSerializer.Deserialize<Dictionary<string, object>>(payload.ToString());
 
@@ -31,7 +41,7 @@ public class BankAccountsController : ControllerBase
         if(validator.HasErrors) {
             return UnprocessableEntity(validator.Payload);
         } else {
-            AccountTransaction accountTransaction = AccountTransactionService.Instance.Transact(
+            AccountTransaction accountTransaction = _accountTransactionService.Transact(
                 bankAccount,
                 hash["transactionType"].ToString(),
                 Decimal.Parse(hash["amount"].ToString())
@@ -44,7 +54,7 @@ public class BankAccountsController : ControllerBase
     [HttpGet("{id}/account_transactions")]
     public IActionResult Index(int id)
     {
-        List<AccountTransaction> transactions = AccountTransactionService.Instance.GetAllByBankAccount(id);
+        List<AccountTransaction> transactions = _accountTransactionService.GetAllByBankAccount(id);
 
         List<Dictionary<string, object>> accountTransactions = new List<Dictionary<string, object>>();
 

@@ -5,8 +5,15 @@ using System.Data.SqlClient;
 using System.Data;
 using BankApi.Models;
 
-public class BankAccountService
+public class RawBankAccountService : IBankAccountService
 {
+    private readonly ICustomerService _customerService;
+    private readonly IATMCardService _atmCardService;
+
+    public RawBankAccountService(ICustomerService customerService)
+    {
+        _customerService = customerService;
+    }
     private string BankAccountsTable = "BankAccounts";
 
     public BankAccount UpdateBalance(BankAccount bankAccount, Decimal balance)
@@ -63,7 +70,7 @@ public class BankAccountService
             string accountNumber    = (string)reader["AccountNumber"];
             int customerId          = (int)reader["CustomerId"];
 
-            Customer customer = CustomerService.Instance.FindById(customerId);
+            Customer customer = _customerService.FindById(customerId);
             
             if(type.Equals("ATM")) {
                 bankAccount = new ATMAccount(
@@ -74,7 +81,7 @@ public class BankAccountService
                 );
             } else if(type.Equals("JOINT")) {
                 int secondaryCustomerId = (int)reader["SecondaryCustomerId"];
-                Customer secondaryCustomer = CustomerService.Instance.FindById(secondaryCustomerId);
+                Customer secondaryCustomer = _customerService.FindById(secondaryCustomerId);
                 bankAccount = new JointAccount(
                     bankAccountId,
                     accountNumber,
@@ -134,7 +141,7 @@ public class BankAccountService
     {
         // Fetch customer given reference number
         // Instantiate a customer instance to fetch its Id
-        Customer c = CustomerService.Instance.FindById(customerId);
+        Customer c = _customerService.FindById(customerId);
 
         // Use id to make http request in json-server
 
@@ -167,7 +174,7 @@ public class BankAccountService
             if(type.Equals("ATM")) {
                 int atmCardId = (int)reader["ATMCardId"];
 
-                ATMCard card = AtmCardService.Instance.FindById(atmCardId);
+                ATMCard card = _atmCardService.FindById(atmCardId);
 
                 ATMAccount account = new ATMAccount(
                     id,
@@ -181,7 +188,7 @@ public class BankAccountService
                 accounts.Add(account);
             } else if(type.Equals("JOINT")) {
                 int secondaryCustomerId = (int)reader["SecondaryCustomerId"];
-                Customer secondaryCustomer = CustomerService.Instance.FindById(secondaryCustomerId);
+                Customer secondaryCustomer = _customerService.FindById(secondaryCustomerId);
 
                 JointAccount account = new JointAccount(
                     id,
@@ -214,7 +221,7 @@ public class BankAccountService
     {
         // Fetch customer given reference number
         // Instantiate a customer instance to fetch its Id
-        Customer c = CustomerService.Instance.FindByRefNumber(refNumber);
+        Customer c = _customerService.FindByRefNumber(refNumber);
 
         // Use id to make http request in json-server
 
@@ -247,7 +254,7 @@ public class BankAccountService
             if(type.Equals("ATM")) {
                 int atmCardId = (int)reader["ATMCardId"];
 
-                ATMCard card = AtmCardService.Instance.FindById(atmCardId);
+                ATMCard card = _atmCardService.FindById(atmCardId);
 
                 ATMAccount account = new ATMAccount(
                     accountNumber,
@@ -260,7 +267,7 @@ public class BankAccountService
                 accounts.Add(account);
             } else if(type.Equals("JOINT")) {
                 int secondaryCustomerId = (int)reader["SecondaryCustomerId"];
-                Customer secondaryCustomer = CustomerService.Instance.FindById(secondaryCustomerId);
+                Customer secondaryCustomer = _customerService.FindById(secondaryCustomerId);
 
                 JointAccount account = new JointAccount(
                     accountNumber,
@@ -288,15 +295,13 @@ public class BankAccountService
         return accounts;
     }
 
-    private static BankAccountService instance = null;
+    public List<BankAccount> GetAll()
+    {
+        throw new NotImplementedException();
+    }
 
-    public static BankAccountService Instance {
-        get {
-            if(instance == null) {
-                instance = new BankAccountService();
-            }
-
-            return instance;
-        }
+    public BankAccount FindByAccountNumber(string accountNumber)
+    {
+        throw new NotImplementedException();
     }
 }
