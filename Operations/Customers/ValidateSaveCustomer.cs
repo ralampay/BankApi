@@ -13,19 +13,19 @@ public class ValidateSaveCustomer : Validator
 
     public void InitializeParameters(Dictionary<string, object> hash)
     {
-        if(hash["id"] != null) {
+        if(hash.GetValueOrDefault("id") != null) {
             this.Id = JsonSerializer.Deserialize<int>((JsonElement)hash["id"]);
         }
 
-        if(hash["firstName"] != null) {
+        if(hash.GetValueOrDefault("firstName") != null) {
             this.FirstName = hash["firstName"].ToString();
         }
 
-        if(hash["lastName"] != null) {
+        if(hash.GetValueOrDefault("lastName") != null) {
             this.LastName = hash["lastName"].ToString();
         }
 
-        if(hash["refNumber"] != null) {
+        if(hash.GetValueOrDefault("refNumber") != null) {
             this.RefNumber  = hash["refNumber"].ToString();
         }
     }
@@ -41,19 +41,19 @@ public class ValidateSaveCustomer : Validator
     {
         _customerService = customerService;
 
-        if(hash["id"] != null) {
+        if(hash.GetValueOrDefault("id") != null) {
             this.Id = JsonSerializer.Deserialize<int>((JsonElement)hash["id"]);
         }
 
-        if(hash["firstName"] != null) {
+        if(hash.GetValueOrDefault("firstName") != null) {
             this.FirstName = hash["firstName"].ToString();
         }
 
-        if(hash["lastName"] != null) {
+        if(hash.GetValueOrDefault("lastName") != null) {
             this.LastName = hash["lastName"].ToString();
         }
 
-        if(hash["refNumber"] != null) {
+        if(hash.GetValueOrDefault("refNumber") != null) {
             this.RefNumber  = hash["refNumber"].ToString();
         }
     }

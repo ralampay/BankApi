@@ -1,5 +1,6 @@
 using BankApi.Models;
 using BankApi.Data;
+using BankApi.Operations.Customers;
 using Microsoft.EntityFrameworkCore;
 using System.Data.SqlClient;
 namespace BankApi.Services;
@@ -49,11 +50,18 @@ public class EFCustomerService : ICustomerService
 
     public Customer Save(Customer c)
     {
-        throw new NotImplementedException();
+        _dataContext.Customers.Add(c);
+
+        _dataContext.SaveChanges();
+
+        return c;
     }
 
     public Customer Save(Dictionary<string, object> hash)
     {
-        throw new NotImplementedException();
+        var builder = new BuildCustomerFromHash(hash);
+        builder.run();
+
+        return Save(builder.Customer);
     }
 }
