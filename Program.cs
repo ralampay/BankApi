@@ -11,7 +11,9 @@ builder.Services.AddSwaggerGen();
 
 // HelloWorld helloWorld = new HelloWorld();
 builder.Services.AddScoped<IBankAccountService, OracleBankAccountService>();
-builder.Services.AddScoped<ICustomerService, MySQLCustomerService>();
+builder.Services.AddScoped<ICustomerService>(provider => {
+    return new MySQLCustomerService();
+});
 builder.Services.AddScoped<HelloService, HelloService>();
 
 var app = builder.Build();
