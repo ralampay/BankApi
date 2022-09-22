@@ -18,7 +18,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IAccountTransactionService, RawAccountTransactionService>();
 builder.Services.AddScoped<IATMCardService, RawAtmCardService>();
 builder.Services.AddScoped<IBankAccountService, RawBankAccountService>();
-builder.Services.AddScoped<ICustomerService, RawCustomerService>();
+builder.Services.AddScoped<ICustomerService, EFCustomerService>();
 builder.Services.AddScoped<ValidateSaveCustomer, ValidateSaveCustomer>();
 
 var app = builder.Build();
