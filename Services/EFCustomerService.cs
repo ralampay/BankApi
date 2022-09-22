@@ -23,22 +23,26 @@ public class EFCustomerService : ICustomerService
 
     public Customer FindByRefNumber(string refNumber)
     {
-        /*
         Customer c = _dataContext.Customers
                         .SingleOrDefault(c => c.RefNumber == refNumber);
 
         return c;
+        /*
+        if(refNumber != null) {
+            var pRefNumber = new SqlParameter(
+                "refNumber",
+                refNumber
+            );
+
+            Customer c = _dataContext.Customers
+                            .FromSqlRaw("SELECT * FROM dbo.Customers WHERE RefNumber=@refNumber", pRefNumber)
+                            .SingleOrDefault();
+
+            return c;
+        }
+
+        return null;
         */
-        var pRefNumber = new SqlParameter(
-            "refNumber",
-            refNumber
-        );
-
-        Customer c = _dataContext.Customers
-                        .FromSqlRaw("SELECT * FROM dbo.Customers WHERE RefNumber=@refNumber", pRefNumber)
-                        .SingleOrDefault();
-
-        return c;
     }
 
     public List<Customer> GetAll()

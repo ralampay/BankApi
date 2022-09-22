@@ -68,6 +68,11 @@ public class ValidateSaveCustomer : Validator
 
     public override void run()
     {
+        Console.WriteLine("Customer ID: " + this.Id);
+        Console.WriteLine("FirstName: " + this.FirstName);
+        Console.WriteLine("LastName: " + this.LastName);
+        Console.WriteLine("RefNumber: " + this.RefNumber);
+
         if(this.FirstName == null || this.FirstName.Equals("")) {
             String msg = "First name is required";
             this.AddError(msg, "firstName");
@@ -81,7 +86,7 @@ public class ValidateSaveCustomer : Validator
         if(this.RefNumber == null || this.RefNumber.Equals("")) {
             String msg = "Ref number is required";
             this.AddError(msg, "refNumber");
-        } else if(this.Id == null) {
+        } else if(this.Id == null || this.Id == 0) {
             Customer temp = _customerService.FindByRefNumber(this.RefNumber);
 
             if(temp != null) {
