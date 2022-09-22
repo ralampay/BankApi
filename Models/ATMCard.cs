@@ -3,8 +3,13 @@ namespace BankApi.Models;
 public class ATMCard
 {
     public Int32 Id { get; set; }
-    public string PINCode { get; private set; }
-    public string CardNumber { get; private set; }
+    public string PINCode { get; set; }
+    public string CardNumber { get; set; }
+
+    public ATMCard() 
+    {
+
+    }
 
     public ATMCard(int id, string pinCode, string cardNumber)
     {
