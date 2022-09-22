@@ -12,17 +12,24 @@ using BankApi.Operations.Customers;
 public class CustomersController : ControllerBase
 {
     private readonly ILogger<CustomersController> _logger;
+    private readonly HelloService _helloService;
+    private readonly ICustomerService _customerService;
 
-    public CustomersController(ILogger<CustomersController> logger)
+    public CustomersController(ILogger<CustomersController> logger, HelloService helloService, ICustomerService customerService)
     {
         _logger = logger;
+        _helloService = helloService;
+        _customerService = customerService;
     }
 
     [HttpGet]
     public IActionResult Index(String ?q)
     {
+        //HelloService helloService = new HelloService();
+        _helloService.Hello();
+
         _logger.LogInformation("q: " + q);
-        List<Customer> customers = CustomerService.Instance.GetAll();
+        List<Customer> customers = _customerService.GetAll();
 
         _logger.LogInformation("Length of customers: " + customers.Count);
 

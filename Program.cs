@@ -1,3 +1,5 @@
+using BankApi.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -6,6 +8,11 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// HelloWorld helloWorld = new HelloWorld();
+builder.Services.AddScoped<IBankAccountService, OracleBankAccountService>();
+builder.Services.AddScoped<ICustomerService, MySQLCustomerService>();
+builder.Services.AddScoped<HelloService, HelloService>();
 
 var app = builder.Build();
 
