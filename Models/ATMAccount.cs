@@ -4,6 +4,13 @@ public class ATMAccount : BankAccount
 {
     public ATMCard ATMCard { get; private set; }
 
+    public Int32 ATMCardId { get; set; }
+
+    public ATMAccount()
+    {
+
+    }
+
     public ATMAccount(string accountNumber, Customer customer, string pinCode, string cardNumber)
         : base(accountNumber, customer)
     {

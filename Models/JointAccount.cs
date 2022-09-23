@@ -2,7 +2,14 @@ namespace BankApi.Models;
 
 public class JointAccount : BankAccount
 {
-    public Customer SecondaryCustomer { get; private set; }
+    public Customer SecondaryCustomer { get; set; }
+
+    public JointAccount()
+    {
+
+    }
+
+    public Int32 SecondaryCustomerId { get; set; }
     public JointAccount(string accountNumber, Customer customer, Customer secondaryCustomer)
         : base(accountNumber, customer)
     {

@@ -1,10 +1,18 @@
 namespace BankApi.Models;
 
+using System.ComponentModel.DataAnnotations.Schema;
+
 public class CheckingAccount : BankAccount
 {
+    [NotMapped]
     public List<Check> CheckBook { get; private set; }
 
     public const int NUM_CHECKS = 100;
+
+    public CheckingAccount()
+    {
+
+    }
 
     public CheckingAccount(string accountNumber, Customer customer)
         : base(accountNumber, customer)
