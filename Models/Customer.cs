@@ -1,6 +1,7 @@
 namespace BankApi.Models;
 
 using Microsoft.EntityFrameworkCore;
+
 public class Customer
 {
     public Int32 Id { get; set; }

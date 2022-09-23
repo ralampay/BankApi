@@ -3,13 +3,16 @@ namespace BankApi.Services;
 using System.Collections.Generic;
 using BankApi.Models;
 using BankApi.Data;
+using BankApi.Operations.ATMCards;
 
 public class EFATMCardService : IATMCardService
 {
     private readonly DataContext _dataContext;
+    private readonly ICustomerService _customerService;
 
-    public EFATMCardService(DataContext dataContext)
+    public EFATMCardService(DataContext dataContext, ICustomerService customerService)
     {
+        _customerService = customerService;
         _dataContext = dataContext;
     }
 
@@ -40,6 +43,11 @@ public class EFATMCardService : IATMCardService
         return _dataContext.ATMCards.SingleOrDefault(c => c.Id == id && c.CustomerId == customerId);
     }
 
+    public List<ATMCard> GetAll()
+    {
+        return _dataContext.ATMCards.ToList();
+    }
+
     public ATMCard Save(ATMCard atmCard)
     {
         if(atmCard.Id == null || atmCard.Id == 0)
@@ -50,5 +58,13 @@ public class EFATMCardService : IATMCardService
         _dataContext.SaveChanges();
 
         return atmCard;
+    }
+
+    public ATMCard Save(Dictionary<string, object> hash)
+    {
+        var builder = new BuildATMCardFromHash(hash, _customerService);
+        builder.run();
+
+        return this.Save(builder.ATMCard);
     }
 }

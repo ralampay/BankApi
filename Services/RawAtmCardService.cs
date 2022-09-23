@@ -60,7 +60,17 @@ public class RawAtmCardService : IATMCardService
         throw new NotImplementedException();
     }
 
+    public List<ATMCard> GetAll()
+    {
+        throw new NotImplementedException();
+    }
+
     public ATMCard Save(ATMCard atmCard)
+    {
+        throw new NotImplementedException();
+    }
+
+    public ATMCard Save(Dictionary<string, object> hash)
     {
         throw new NotImplementedException();
     }

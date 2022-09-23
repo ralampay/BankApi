@@ -32,7 +32,8 @@ public class EFCustomerService : ICustomerService
 
     public Customer FindById(int id)
     {
-        Customer temp = _dataContext.Customers.SingleOrDefault(c => c.Id == id);
+        // Perform Eager Loading
+        Customer temp = _dataContext.Customers.Include(c => c.ATMCards).SingleOrDefault(c => c.Id == id);
 
         return temp;
     }

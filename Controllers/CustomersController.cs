@@ -13,12 +13,19 @@ public class CustomersController : ControllerBase
 {
     private readonly ILogger<CustomersController> _logger;
     private readonly ICustomerService _customerService;
+    private readonly IATMCardService _atmCardService;
     private readonly ValidateSaveCustomer _validateSaveCustomer;
 
-    public CustomersController(ILogger<CustomersController> logger, ICustomerService customerService, ValidateSaveCustomer validateSaveCustomer)
+    public CustomersController(
+        ILogger<CustomersController> logger, 
+        ICustomerService customerService,
+        IATMCardService atmCardService,
+        ValidateSaveCustomer validateSaveCustomer
+    )
     {
         _logger = logger;
         _customerService = customerService;
+        _atmCardService = atmCardService;
         _validateSaveCustomer = validateSaveCustomer;
     }
 
@@ -33,7 +40,25 @@ public class CustomersController : ControllerBase
     [HttpGet("{id}/atm_cards")]
     public IActionResult AtmCards(int id)
     {
-        throw new NotImplementedException();
+        Customer customer = _customerService.FindById(id);
+
+        // Eager loading
+
+        List<ATMCard> cards = customer.ATMCards.ToList();
+
+        List<Dictionary<string, object>> items = new List<Dictionary<string, object>>();
+
+        foreach(ATMCard card in cards)
+        {
+            Dictionary<string, object> item = new Dictionary<string, object>();
+            item["id"] = card.Id;
+            item["cardNumber"] = card.CardNumber;
+            item["customerReferenceNumber"] = customer.RefNumber;
+
+            items.Add(item);
+        }
+
+        return Ok(items);
     }
 
     [HttpGet]

@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using BankApi.Services;
 using BankApi.Operations.Customers;
+using BankApi.Operations.ATMCards;
 using BankApi.Data;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,10 +17,11 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<IAccountTransactionService, RawAccountTransactionService>();
-builder.Services.AddScoped<IATMCardService, RawAtmCardService>();
+builder.Services.AddScoped<IATMCardService, EFATMCardService>();
 builder.Services.AddScoped<IBankAccountService, RawBankAccountService>();
 builder.Services.AddScoped<ICustomerService, EFCustomerService>();
 builder.Services.AddScoped<ValidateSaveCustomer, ValidateSaveCustomer>();
+builder.Services.AddScoped<ValidateSaveATMCard, ValidateSaveATMCard>();
 
 var app = builder.Build();
 

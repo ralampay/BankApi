@@ -28,16 +28,17 @@ public class ATMCardsController : ControllerBase
     [HttpGet]
     public IActionResult Index()
     {
-
         List<ATMCard> atmCards = _atmCardService.GetAll();
 
-        throw new NotImplementedException();
+        return Ok(atmCards);
     }
 
     [HttpGet("{id}/customer")]
-    public IActionResult GetCustomer()
+    public IActionResult GetCustomer(int id)
     {
-        throw new NotImplementedException();
+        ATMCard atmCard =_atmCardService.FindById(id);
+
+        return Ok(atmCard.Customer);
     }
 
     [HttpGet("{id}")] // Example: atm_cards/5
@@ -96,7 +97,9 @@ public class ATMCardsController : ControllerBase
                 return UnprocessableEntity(_validateSaveATMCard.Payload);
             } else {
                 ATMCard temp = _atmCardService.Save(hash);
-                return Ok(temp);
+
+                hash["id"] = temp.Id;
+                return Ok(hash);
             }
         } catch(Exception e) {
             Dictionary<string, string> msg = new Dictionary<string, string>();
