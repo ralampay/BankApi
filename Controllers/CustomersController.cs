@@ -22,6 +22,20 @@ public class CustomersController : ControllerBase
         _validateSaveCustomer = validateSaveCustomer;
     }
 
+    /**
+    1. Return atm cards in the following format:
+    {
+        id:,
+        cardNumber:,
+        customerRefNumber
+    }
+    **/ 
+    [HttpGet("{id}/atm_cards")]
+    public IActionResult AtmCards(int id)
+    {
+        throw new NotImplementedException();
+    }
+
     [HttpGet]
     public IActionResult Index(String ?q)
     {

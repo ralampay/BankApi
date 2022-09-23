@@ -21,6 +21,9 @@ public class DataContext : DbContext
         builder.Entity<ATMCard>()
             .HasIndex(c => c.CardNumber)
             .IsUnique();
+
+        builder.Entity<Customer>()
+            .HasMany(c => c.ATMCards);
     }
 
     public DataContext(DbContextOptions<DataContext> options)

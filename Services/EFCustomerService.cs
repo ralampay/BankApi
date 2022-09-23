@@ -2,7 +2,7 @@ using BankApi.Models;
 using BankApi.Data;
 using BankApi.Operations.Customers;
 using Microsoft.EntityFrameworkCore;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 namespace BankApi.Services;
 
 public class EFCustomerService : ICustomerService
@@ -39,11 +39,6 @@ public class EFCustomerService : ICustomerService
 
     public Customer FindByRefNumber(string refNumber)
     {
-        Customer c = _dataContext.Customers
-                        .SingleOrDefault(c => c.RefNumber == refNumber);
-
-        return c;
-        /*
         if(refNumber != null) {
             var pRefNumber = new SqlParameter(
                 "refNumber",
@@ -58,7 +53,6 @@ public class EFCustomerService : ICustomerService
         }
 
         return null;
-        */
     }
 
     public List<Customer> GetAll()

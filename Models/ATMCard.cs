@@ -5,6 +5,8 @@ public class ATMCard
     public Int32 Id { get; set; }
     public string PINCode { get; set; }
     public string CardNumber { get; set; }
+    public Customer Customer { get; set; }
+    public Int32 CustomerId { get; set; }
 
     public ATMCard() 
     {

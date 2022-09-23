@@ -5,10 +5,21 @@ using System.Data.SqlClient;
 using System.Data;
 using BankApi.Models;
 using BankApi.Services;
+using System.Collections.Generic;
 
 public class RawAtmCardService : IATMCardService
 {
     private string ATMCardsTable = "ATMCards";
+
+    public bool Delete(ATMCard atmCard)
+    {
+        throw new NotImplementedException();
+    }
+
+    public List<ATMCard> FindByCustomerId(int customerId)
+    {
+        throw new NotImplementedException();
+    }
 
     public ATMCard FindById(int id)
     {
@@ -42,5 +53,15 @@ public class RawAtmCardService : IATMCardService
         }
 
         return atmCard;
+    }
+
+    public ATMCard FindByIdAndCustomerId(int id, int customerId)
+    {
+        throw new NotImplementedException();
+    }
+
+    public ATMCard Save(ATMCard atmCard)
+    {
+        throw new NotImplementedException();
     }
 }
