@@ -14,11 +14,27 @@ public class EFCustomerService : ICustomerService
         _dataContext = dataContext;
     }
 
+    public bool Exists(int id)
+    {
+        return _dataContext.Customers.SingleOrDefault(c => c.Id == id) != null;
+    }
+
+    public bool Exists(string refNumber)
+    {
+        return _dataContext.Customers.SingleOrDefault(c => c.RefNumber.Equals(refNumber)) != null;
+    }
+
+    // Exists where refNumber is existing for all other customers that are not based on id
+    public bool Exists(string refNumber, int notId)
+    {
+        return _dataContext.Customers.SingleOrDefault(c => c.Id != notId && c.RefNumber.Equals(refNumber)) != null;
+    }
+
     public Customer FindById(int id)
     {
-        Customer c = _dataContext.Customers.SingleOrDefault(c => c.Id == id);
+        Customer temp = _dataContext.Customers.SingleOrDefault(c => c.Id == id);
 
-        return c;
+        return temp;
     }
 
     public Customer FindByRefNumber(string refNumber)
@@ -54,8 +70,15 @@ public class EFCustomerService : ICustomerService
 
     public Customer Save(Customer c)
     {
-        _dataContext.Customers.Add(c);
-
+        if(c.Id == null || c.Id == 0) {
+            _dataContext.Customers.Add(c);
+        } else {
+            Customer temp = this.FindById(c.Id);
+            temp.FirstName = c.FirstName;
+            temp.LastName = c.LastName;
+            temp.RefNumber = c.RefNumber;
+        }
+        
         _dataContext.SaveChanges();
 
         return c;

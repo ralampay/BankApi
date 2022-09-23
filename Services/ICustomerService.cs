@@ -9,5 +9,11 @@ public interface ICustomerService
     public List<Customer> GetAll();
     public Customer FindById(int id);
 
+    public bool Exists(int id);
+
+    public bool Exists(String refNumber);
+
+    public bool Exists(String refNumber, int notId);
+
     public Customer FindByRefNumber(string refNumber);
 }

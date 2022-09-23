@@ -14,7 +14,7 @@ public class ValidateSaveCustomer : Validator
     public void InitializeParameters(Dictionary<string, object> hash)
     {
         if(hash.GetValueOrDefault("id") != null) {
-            this.Id = JsonSerializer.Deserialize<int>((JsonElement)hash["id"]);
+            this.Id = Int32.Parse(hash["id"].ToString());
         }
 
         if(hash.GetValueOrDefault("firstName") != null) {
@@ -58,14 +58,6 @@ public class ValidateSaveCustomer : Validator
         }
     }
 
-    public ValidateSaveCustomer(Customer customer)
-    {
-        this.Id         = customer.Id;
-        this.FirstName  = customer.FirstName;
-        this.LastName   = customer.LastName;
-        this.RefNumber  = customer.RefNumber;
-    }
-
     public override void run()
     {
         Console.WriteLine("Customer ID: " + this.Id);
@@ -87,28 +79,19 @@ public class ValidateSaveCustomer : Validator
             String msg = "Ref number is required";
             this.AddError(msg, "refNumber");
         } else if(this.Id == null || this.Id == 0) {
-            Customer temp = _customerService.FindByRefNumber(this.RefNumber);
-
-            if(temp != null) {
+            if(_customerService.Exists(this.RefNumber)) {
                 String msg = "Ref number is already taken";
                 this.AddError(msg, "refNumber");
             }
         } else {
             // Validating refNumber for update
-            Customer temp = _customerService.FindById(this.Id);
-
-            if(temp == null) {
+            if(!_customerService.Exists(this.Id)) {
                 String msg = "Customer not found";
                 this.AddError(msg, "id");
             } else {
-                if(!this.RefNumber.Equals(temp.RefNumber)) {
-                    // CHeck for uniqueness
-                    Customer existingCustomer = _customerService.FindByRefNumber(this.RefNumber);
-
-                    if(existingCustomer != null) {
-                        String msg = "Ref number is already taken";
-                        this.AddError(msg, "refNumber");
-                    }
+                if(_customerService.Exists(this.RefNumber, this.Id)) {
+                    String msg = "Ref number is already taken";
+                    this.AddError(msg, "refNumber");
                 }
             }
         }

@@ -53,36 +53,23 @@ public class CustomersController : ControllerBase
     public IActionResult Update([FromBody]object payload, int id)
     {
         try {
-            Customer customer = _customerService.FindById(id);
-
             Dictionary<string, object> hash = JsonSerializer.Deserialize<Dictionary<string, object>>(payload.ToString());
 
-            if(hash["firstName"] != null) {
-                customer.FirstName = hash["firstName"].ToString();
-            }
+            hash["id"] = id;
+            _validateSaveCustomer.InitializeParameters(hash);
+            _validateSaveCustomer.run();
 
-            if(hash["lastName"] != null) {
-                customer.LastName = hash["lastName"].ToString();
-            }
-
-            if(hash["refNumber"] != null) {
-                customer.RefNumber = hash["refNumber"].ToString();
-            }
-
-            Validator validator = new ValidateSaveCustomer(customer);
-            validator.run();
-
-            if(validator.HasErrors) {
-                return UnprocessableEntity(validator.Payload);
+            if(_validateSaveCustomer.HasErrors) {
+                return UnprocessableEntity(_validateSaveCustomer.Payload);
             } else {
-                Customer temp = _customerService.Save(customer);
-                return Ok(temp);
+                return Ok(_customerService.Save(hash));
             }
-            
         } catch(Exception e) {
             Dictionary<string, string> msg = new Dictionary<string, string>();
             msg["message"] = "Something went wrong";
 
+            _logger.LogInformation(e.Message);
+            _logger.LogInformation(e.StackTrace);
             return StatusCode(StatusCodes.Status500InternalServerError, msg);
 
         }

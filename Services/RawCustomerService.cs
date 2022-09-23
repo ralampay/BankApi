@@ -155,4 +155,19 @@ public class RawCustomerService : ICustomerService
 
         return customers;
     }
+
+    public bool Exists(int id)
+    {
+        throw new NotImplementedException();
+    }
+
+    public bool Exists(string refNumber)
+    {
+        throw new NotImplementedException();
+    }
+
+    public bool Exists(string refNumber, int notId)
+    {
+        throw new NotImplementedException();
+    }
 }
