@@ -27,6 +27,8 @@ builder.Services.AddScoped<ValidateSaveCustomer, ValidateSaveCustomer>();
 builder.Services.AddScoped<ValidateSaveATMCard, ValidateSaveATMCard>();
 builder.Services.AddScoped<ValidateRegister, ValidateRegister>();
 builder.Services.AddScoped<CustomerFilter, CustomerFilter>();
+builder.Services.AddScoped<AuthenticationFilter, AuthenticationFilter>();
+builder.Services.AddScoped<AuthenticationService, AuthenticationService>();
 
 var app = builder.Build();
 

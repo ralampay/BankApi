@@ -2,20 +2,32 @@ namespace BankApi.Filters;
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using BankApi.Services;
+using BankApi.Models;
 
 class AuthenticationFilter : Attribute, IAuthorizationFilter
 {
+
+    private readonly IUserService _userService;
+
+    public AuthenticationFilter(IUserService userService)
+    {
+        _userService = userService;
+    }
     public void OnAuthorization(AuthorizationFilterContext context)
     {
         bool isAuthenticated = false;
-        string validToken = "secret";
 
         if(context.HttpContext.Request.Headers.ContainsKey("X-AWESOME-AUTHENTICATION")) {
 
             string tokenValue = context.HttpContext.Request.Headers["X-AWESOME-AUTHENTICATION"].ToString();
 
-            if(tokenValue.Equals(validToken)) {
+            User user = _userService.FindByToken(tokenValue);
+
+            if(user != null) {
                 isAuthenticated = true;
+
+                context.HttpContext.Items.Add("user", user);
             }
         }
 

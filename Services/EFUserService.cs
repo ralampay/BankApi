@@ -15,6 +15,11 @@ public class EFUserService : IUserService
         _dataContext = dataContext;
     }
 
+    public User FindByToken(string token)
+    {
+        return _dataContext.Users.SingleOrDefault(u => u.Token.Equals(token));
+    }
+
     public User FindByUsername(string username)
     {
         return _dataContext.Users.SingleOrDefault(u => u.Username.Equals(username));

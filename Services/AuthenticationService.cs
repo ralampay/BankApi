@@ -17,9 +17,8 @@ public class AuthenticationService
         _dataContext = dataContext;
     }
 
-    public void Logout(string username)
+    public void Logout(User user)
     {
-        User user = _userService.FindByUsername(username);
         user.Token = null;
 
         _dataContext.SaveChanges();

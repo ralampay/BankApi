@@ -6,4 +6,5 @@ public interface IUserService
 {
     public User FindByUsername(string username);
     public User Register(string username, string password);
+    public User FindByToken(string token);
 }

@@ -10,7 +10,7 @@ using BankApi.Filters;
 
 [ApiController]
 [Route("customers")]
-[AuthenticationFilter]
+[ServiceFilter(typeof(AuthenticationFilter))]
 public class CustomersController : ControllerBase
 {
     private readonly ILogger<CustomersController> _logger;
