@@ -16,11 +16,11 @@ public class DataContext : DbContext
             .HasDiscriminator(bankAccount => bankAccount.AccountType)
             .HasValue("ATM");
 
-        /*
         builder.Entity<JointAccount>()
             .HasDiscriminator(bankAccount => bankAccount.AccountType)
             .HasValue("JOINT");
-        */
+
+        
 
         builder.Entity<Customer>()
             .HasIndex(c => c.RefNumber)

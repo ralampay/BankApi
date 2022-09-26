@@ -6,9 +6,11 @@ using BankApi.Models;
 using BankApi.Services;
 using BankApi.Operations;
 using BankApi.Operations.Customers;
+using BankApi.Filters;
 
 [ApiController]
 [Route("customers")]
+[CustomerFilter]
 public class CustomersController : ControllerBase
 {
     private readonly ILogger<CustomersController> _logger;
@@ -64,12 +66,9 @@ public class CustomersController : ControllerBase
     [HttpGet]
     public IActionResult Index(String ?q)
     {
-
-        _logger.LogInformation("q: " + q);
         List<Customer> customers = _customerService.GetAll();
 
-        _logger.LogInformation("Length of customers: " + customers.Count);
-
+        Console.WriteLine("Returning all customers...");
         return Ok(customers);
     }
 
