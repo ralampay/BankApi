@@ -10,7 +10,7 @@ using BankApi.Filters;
 
 [ApiController]
 [Route("customers")]
-[CustomerFilter]
+[AuthenticationFilter]
 public class CustomersController : ControllerBase
 {
     private readonly ILogger<CustomersController> _logger;
@@ -64,6 +64,7 @@ public class CustomersController : ControllerBase
     }
 
     [HttpGet]
+    [ServiceFilter(typeof(CustomerFilter))]
     public IActionResult Index(String ?q)
     {
         List<Customer> customers = _customerService.GetAll();
