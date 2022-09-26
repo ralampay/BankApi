@@ -8,19 +8,13 @@ public class DataContext : DbContext
     public DbSet<Customer> Customers { get; set; }
     public DbSet<ATMCard> ATMCards { get; set; }
 
-    public DbSet<BankAccount> BankAccounts { get; set; }
+    public DbSet<User> Users { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
-        builder.Entity<ATMAccount>()
-            .HasDiscriminator(bankAccount => bankAccount.AccountType)
-            .HasValue("ATM");
-
-        builder.Entity<JointAccount>()
-            .HasDiscriminator(bankAccount => bankAccount.AccountType)
-            .HasValue("JOINT");
-
-        
+        builder.Entity<User>()
+            .HasIndex(u => u.Username)
+            .IsUnique();
 
         builder.Entity<Customer>()
             .HasIndex(c => c.RefNumber)
