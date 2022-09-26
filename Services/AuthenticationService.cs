@@ -42,6 +42,7 @@ public class AuthenticationService
 
                 user.Token = generator.Token;
                 user.LastLogin = DateTime.Now;
+                user.TokenExpiration = DateTime.Now.AddMinutes(5);
 
                 _dataContext.SaveChanges();
 

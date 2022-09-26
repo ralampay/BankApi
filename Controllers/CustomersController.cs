@@ -40,6 +40,7 @@ public class CustomersController : ControllerBase
     }
     **/ 
     [HttpGet("{id}/atm_cards")]
+    [AuthorizeEncoderFilter]
     public IActionResult AtmCards(int id)
     {
         Customer customer = _customerService.FindById(id);
@@ -65,6 +66,7 @@ public class CustomersController : ControllerBase
 
     [HttpGet]
     [ServiceFilter(typeof(CustomerFilter))]
+    [AuthorizeEncoderFilter]
     public IActionResult Index(String ?q)
     {
         List<Customer> customers = _customerService.GetAll();
@@ -74,6 +76,7 @@ public class CustomersController : ControllerBase
     }
 
     [HttpGet("{id}")] // Example: customers/5
+    [AuthorizeEncoderFilter]
     public IActionResult Show(int id)
     {
         Customer customer = _customerService.FindById(id);
@@ -89,6 +92,7 @@ public class CustomersController : ControllerBase
     }
 
     [HttpPut("{id}")]
+    [AuthorizeAdminFilter]
     public IActionResult Update([FromBody]object payload, int id)
     {
         try {
@@ -115,6 +119,7 @@ public class CustomersController : ControllerBase
     }
 
     [HttpPost]
+    [AuthorizeAdminFilter]
     public IActionResult Create([FromBody]object payload)
     {
         try {

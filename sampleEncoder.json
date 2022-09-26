@@ -1,6 +1,6 @@
 {
-    "username": "admin",
+    "username": "encoder",
     "password": "password",
     "passwordConfirmation": "password",
-    "role": "admin"
+    "role": "encoder"
 }

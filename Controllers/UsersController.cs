@@ -83,7 +83,7 @@ public class UsersController : ControllerBase
             if(_validateRegister.HasErrors) {
                 return UnprocessableEntity(_validateRegister.Payload);
             } else {
-                return Ok(_userService.Register(hash["username"].ToString(), hash["password"].ToString()));
+                return Ok(_userService.Register(hash["username"].ToString(), hash["password"].ToString(), hash["role"].ToString()));
             }
         }
         catch(Exception e)

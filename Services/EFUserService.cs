@@ -25,7 +25,7 @@ public class EFUserService : IUserService
         return _dataContext.Users.SingleOrDefault(u => u.Username.Equals(username));
     }
 
-    public User Register(string username, string password)
+    public User Register(string username, string password, string role)
     {
         HashPassword hasher = new HashPassword(password);
         hasher.run();
@@ -34,7 +34,8 @@ public class EFUserService : IUserService
 
         User user = new User() {
             Username = username,
-            EncryptedPassword = encryptedPassword
+            EncryptedPassword = encryptedPassword,
+            Role = role
         };
 
         _dataContext.Users.Add(user);

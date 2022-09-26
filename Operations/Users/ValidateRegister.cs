@@ -8,6 +8,7 @@ public class ValidateRegister : Validator
     public string Username { get; set; }
     public string Password { get; set; }
     public string PasswordConfirmation { get; set; }
+    public string Role { get; set; }
 
     private readonly IUserService _userService;
 
@@ -23,6 +24,10 @@ public class ValidateRegister : Validator
 
         if(hash.GetValueOrDefault("passwordConfirmation") != null) {
             this.PasswordConfirmation = hash["passwordConfirmation"].ToString();
+        }
+
+        if(hash.GetValueOrDefault("role") != null) {
+            this.Role = hash["role"].ToString();
         }
     }
 
@@ -52,6 +57,11 @@ public class ValidateRegister : Validator
         if(this.Username == null || this.Username.Equals("")) {
             String msg = "Username is required";
             this.AddError(msg, "username");
+        }
+
+        if(this.Role == null || this.Role.Equals("")) {
+            String msg = "Role is required";
+            this.AddError(msg, "role");
         }
     }
 }
