@@ -4,6 +4,7 @@ using BankApi.Models;
 using BankApi.Data;
 using System.Security.Cryptography;
 using System.Text;
+using BankApi.Operations.Users;
 
 public class EFUserService : IUserService
 {
@@ -21,11 +22,10 @@ public class EFUserService : IUserService
 
     public User Register(string username, string password)
     {
-        SHA256 sha256 = SHA256.Create();
-        byte[] sourceBytes = Encoding.UTF8.GetBytes(password);
-        byte[] hashBytes = sha256.ComputeHash(sourceBytes);
+        HashPassword hasher = new HashPassword(password);
+        hasher.run();
 
-        string encryptedPassword = BitConverter.ToString(hashBytes).Replace("-", String.Empty);
+        string encryptedPassword = hasher.Hash;
 
         User user = new User() {
             Username = username,
